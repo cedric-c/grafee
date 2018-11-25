@@ -26,3 +26,31 @@ In order to run grafee you need to have installed go. You must also be able to g
 [setup]: guide/pre.png
 [command]: guide/command.png
 [result]: guide/result.png
+
+
+## Sample Output
+
+```
+Corrected by Cédric C (me@myinstitution.ca). Please contact me for all questions and inquiries.
+
+Group name: Team404
+Group members: Ad Lehman, 200810.
+Final grade: (49.5)
+
+Comments: :
+You have a nice UML, everything looks nice but your APK does not compile. Upon further inspection of the source, it appears as though every class does not have actual implementations. (-10). ——— You have no unit tests (-10). ——— You submitted half a day late (-0.5).
+
+
+=== Breakdown ===
+(10/10) UML The student submitted a UML diagram with the required classes (-1 per missing class) (-5 for broken ISA).
+(0/10) APK  The student submitted an APK which compiles. (-1 per minute of debugging required by the TA to get the APK working).
+(0/15) Tests    5 Unit test cases (simple local tests). No need to include instrumentation or Espresso Tests (UI).
+(19.5/20) Submission Date   The student submitted the assignment on time. (-1 per day missed).
+(20/20) Required Submission The students submitted the required files. (-1 for each missing file). (-10 if the student submitted an assignment from another course). (-20 if the submission is a syllabus).
+
+=================
+
+Found an error in my correction? Send me an email!
+
+Cédric C (me@myinstitution.ca)
+```
