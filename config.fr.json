@@ -1,0 +1,17 @@
+{
+    "corrector" : [{
+        "name" : "Cédric C",
+        "email" : "me@myinstitution.ca"
+    }],
+    "content":[{
+        "by" : "Correction par",
+        "contact" : "SVP, me contacter pour poser vos questions",
+        "error" : "Vous voyez une erreur dans la correction? Envoyez-moii vos questions!",
+        "group":"Nom du groupe",
+        "members":"Membre(s) du groupe",
+        "grade":"Note finale",
+        "comments":"Commentaires: ",
+        "breakdown1":"=== Breakdown ===",
+        "breakdown2":"================="
+    }]
+}

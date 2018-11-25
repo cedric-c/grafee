@@ -9,6 +9,7 @@ import (
     "bufio"
     "strconv"
     "bytes"
+    "flag"
 )
 /*
 Requirement (s) are parsed from the columns starting from 2 (i=0)  and ending at n-2 (i=0).
@@ -38,7 +39,15 @@ type Corrector struct {
     Email string `json:"email"`
 }
 
+type Users struct {
+    Correctors []Corrector `json:"corrector"`
+}
+
 type Messages struct {
+    Messages []Message `json:"content"`
+}
+
+type Message struct {
     By string `json:"by"`
     Contact string `json:"contact"`
     Error string `json:"error"`
@@ -132,59 +141,65 @@ func initGroups(file string, limit int) []Group{
 
 func main(){
     
-    cliArgs := os.Args[1:]
-    // jsonPreferences, err := os.Open("config.json")
-    file := cliArgs[0]
-    fmt.Println(file)
+    filePtrFlag := flag.String("file", "", "A relative path to the file on which to generate the receipts.")
+    langPtrFlag := flag.String("lang", "en","The language with which to generate the receipts. Available options are (en/fr).")
+    flag.Parse()
     
-    requirements := initRequirements(file, 3)
-    groups := initGroups(file, 3)
-
-    prefs, _ := os.Open("config.json")
+    requirements := initRequirements(*filePtrFlag, 3)
+    groups := initGroups(*filePtrFlag, 3)
+    var fileName string
+    if(*langPtrFlag == "en"){
+        fileName = "config.en.json"
+    } else if (*langPtrFlag == "fr") {
+        fileName = "config.fr.json"
+    } else {
+        fmt.Println("Invalid language. Choices are (en/fr). Type grafee.go -h for help.")
+        os.Exit(1)
+    }
+    
+    
+    prefs, _ := os.Open(fileName)
     defer prefs.Close()
-    fmt.Printf("%+v", prefs)
-    
     
     byteVals, _ := ioutil.ReadAll(prefs)
-    var results map[string]interface{}
-    
-    // fmt.Printf("%+v", byteVals)
 
-    // var corrector Corrector
-    // var messages Messages
+    var corrector Users
+    var messages Messages
     
-    json.Unmarshal([]byte(byteVals), &results)
-    fmt.Printf("%+v", results["user"])
-    // json.Unmarshal([]byte(byteVals), &messages)
-    // fmt.Println(corrector.Name)
-    // fmt.Println(messages.By)
+    json.Unmarshal(byteVals, &corrector)
+    json.Unmarshal(byteVals, &messages)
 
-    
-    
     var buf bytes.Buffer
     for _, group := range groups {
+                
+        msg := messages.Messages[0]
+        ta  := corrector.Correctors[0]
         
-        notice1 := "Correction par Cédric (cclem054@uottawa.ca). SVP, me contacter pour poser vos questions.\n\n"
-        notice2 := "Vous voyez une erreur dans la correction? Envoyez-moi vos questions!\n\nCédric (cclem054@uottawa.ca)"
-        
-        
+        notice1 := fmt.Sprintf("%v %v (%v). %v\n\n",msg.By,
+            ta.Name,
+            ta.Email,
+            msg.Contact)
+        notice2 := fmt.Sprintf("%v\n\n%v (%v)",
+            msg.Error,
+            ta.Name,
+            ta.Email)
         
         filename := fmt.Sprintf("%v.txt", group.Name)
         
         buf.WriteString(fmt.Sprintf(notice1))
-        buf.WriteString(fmt.Sprintf("Nom du groupe: %v\n", group.Name))
-        buf.WriteString(fmt.Sprintf("Membres du groupe: %v\n", group.Members))
-        buf.WriteString(fmt.Sprintf("Note finale: (%v)\n", group.Mark))
-        buf.WriteString(fmt.Sprintf("\nCommentaires:\n%v\n\n", group.Comments))
+        buf.WriteString(fmt.Sprintf("%v: %v\n",msg.GroupName, group.Name))
+        buf.WriteString(fmt.Sprintf("%v: %v\n",msg.Members, group.Members))
+        buf.WriteString(fmt.Sprintf("%v: (%v)\n",msg.Grade, group.Mark))
+        buf.WriteString(fmt.Sprintf("\n%v:\n%v\n\n",msg.Comments, group.Comments))
         
         
-        buf.WriteString(fmt.Sprintf("\n=== Breakdown ===\n"))
+        buf.WriteString(fmt.Sprintf("\n%v\n", msg.Breakdown1))
         for i, grade := range group.Grades {
             buf.WriteString(fmt.Sprintf("(%+v/%+v) ", grade, requirements[i].Weight))
             buf.WriteString(fmt.Sprintf("%v\t", requirements[i].Name))
             buf.WriteString(fmt.Sprintf("%v\n", requirements[i].Description))
         }
-        buf.WriteString(fmt.Sprintf("\n=================\n\n"))
+        buf.WriteString(fmt.Sprintf("\n%v\n\n", msg.Breakdown2))
         buf.WriteString(fmt.Sprintf(notice2))
 
         f,_ := os.Create(filename)
