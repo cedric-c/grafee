@@ -23,6 +23,6 @@ In order to run grafee you need to have installed go. You must also be able to g
 
 ![Result][result]
 
-[setup]: guide/pre.png&s=200
-[command]: guide/command.png&s=200
-[result]: guide/result.png&s=200
+[setup]: guide/pre.png
+[command]: guide/command.png
+[result]: guide/result.png
