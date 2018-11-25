@@ -2,8 +2,10 @@ package main
 import (
     "fmt"
     "encoding/csv"
+    "encoding/json"
     "os"
     "io"
+    "io/ioutil"
     "bufio"
     "strconv"
     "bytes"
@@ -29,6 +31,23 @@ type Group struct {
     Grades []string
     Comments string
     Mark string
+}
+
+type Corrector struct {
+    Name string `json:"name"`
+    Email string `json:"email"`
+}
+
+type Messages struct {
+    By string `json:"by"`
+    Contact string `json:"contact"`
+    Error string `json:"error"`
+    GroupName string `json:"group"`
+    Members string `json:"members"`
+    Grade string `json:"grade"`
+    Comments string `json:"comments"`
+    Breakdown1 string `json:"breakdown1"`
+    Breakdown2 string `json:"breakdown2"`
 }
 
 // limit is the last value in the requirements struct
@@ -87,9 +106,6 @@ func initGroups(file string, limit int) []Group{
     // start from line 3, since headers stop on line 2
     for _, value := range lines[limit:len(lines)]{
         
-            // need to rearrange these...
-        fmt.Printf("%+v ", len(value))
-        fmt.Printf("%+v \n", value[6])
         markIndex := len(value) - 1
         commentIndex := len(value) - 2
         lastGradeIndex := len(value) - 4
@@ -116,17 +132,34 @@ func initGroups(file string, limit int) []Group{
 
 func main(){
     
-    // cliArgs := os.Args[1:]
+    cliArgs := os.Args[1:]
     // jsonPreferences, err := os.Open("config.json")
-    file := "samples/SampleGradingFile/Presentation.csv"
+    file := cliArgs[0]
     fmt.Println(file)
     
-    // requirements are first three rows, exclusive 3rd
     requirements := initRequirements(file, 3)
     groups := initGroups(file, 3)
-    // fmt.Printf("\n\n\n\n")
-    // fmt.Printf("%+v\n", requirements)
-    // fmt.Printf("%+v\n", groups)
+
+    prefs, _ := os.Open("config.json")
+    defer prefs.Close()
+    fmt.Printf("%+v", prefs)
+    
+    
+    byteVals, _ := ioutil.ReadAll(prefs)
+    var results map[string]interface{}
+    
+    // fmt.Printf("%+v", byteVals)
+
+    // var corrector Corrector
+    // var messages Messages
+    
+    json.Unmarshal([]byte(byteVals), &results)
+    fmt.Printf("%+v", results["user"])
+    // json.Unmarshal([]byte(byteVals), &messages)
+    // fmt.Println(corrector.Name)
+    // fmt.Println(messages.By)
+
+    
     
     var buf bytes.Buffer
     for _, group := range groups {
@@ -141,7 +174,7 @@ func main(){
         buf.WriteString(fmt.Sprintf(notice1))
         buf.WriteString(fmt.Sprintf("Nom du groupe: %v\n", group.Name))
         buf.WriteString(fmt.Sprintf("Membres du groupe: %v\n", group.Members))
-        buf.WriteString(fmt.Sprintf("Note finale: (%v/100)\n", group.Mark))
+        buf.WriteString(fmt.Sprintf("Note finale: (%v)\n", group.Mark))
         buf.WriteString(fmt.Sprintf("\nCommentaires:\n%v\n\n", group.Comments))
         
         
