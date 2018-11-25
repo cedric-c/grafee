@@ -12,12 +12,15 @@ grafee also supports multiple languages. Each language has the text strings defi
 In order to run grafee you need to have installed go. You must also be able to generate the CSV files using any spreadsheet application. Personally, I use Numbers on OSX but any should work.
 
 1. First you want to navigate to the correct directory (this is typically your working directory if you've cloned the project)
+
 <center>![][setup]</center>
 
 2. Once this is done, run the command to obtain the output. In this example, our CSVs are located two directories below in `samples/SampleGradingFile`. We will be grading the contents of `Assignment1.csv`. The full command which was used in this example is `go run grafee.go -file samples/SampleGradingFile/Assignment1.csv -lang=en`.
+
 <center>![][command]</center>
 
 3. Students can now receive more feedback on their assignments!
+
 <center>![][result]</center>
 
 [setup]:guide/pre.png
