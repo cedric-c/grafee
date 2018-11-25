@@ -117,7 +117,7 @@ func initGroups(file string, limit int) []Group{
         
         markIndex := len(value) - 1
         commentIndex := len(value) - 2
-        lastGradeIndex := len(value) - 4
+        lastGradeIndex := len(value) - 3
         
         groupeName := value[0]
         members := value[1]
