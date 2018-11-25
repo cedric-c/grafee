@@ -141,6 +141,11 @@ func initGroups(file string, limit int) []Group{
 
 func main(){
     
+    if(len(os.Args) < 2){
+        fmt.Println("Flags required. run grafee -h for options.")
+        os.Exit(1)
+    }
+    
     filePtrFlag := flag.String("file", "", "A relative path to the file on which to generate the receipts.")
     langPtrFlag := flag.String("lang", "en","The language with which to generate the receipts. Available options are (en/fr).")
     flag.Parse()
