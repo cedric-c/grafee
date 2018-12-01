@@ -11,7 +11,9 @@ grafee also supports multiple languages. Each language has the text strings defi
 
 ## Guide
 
-In order to run grafee you need to have installed go. You must also be able to generate the CSV files using any spreadsheet application. Personally, I use Numbers on OSX but any should work.
+> For Mach-O based systems, you can reference the executable in the release and run grafee without having installed go. Make sure to also have the `config.LANG.json` files in the same directory as grafee. These will be packaged inside grafee in future releases.
+
+In order to run grafee on non Mach-O based systems, you need to have installed go. You must also be able to generate the CSV files using any spreadsheet application. Personally, I use Numbers on OSX but any should work.
 
 1. First you want to navigate to the correct directory (this is typically your working directory if you've cloned the project)
 
